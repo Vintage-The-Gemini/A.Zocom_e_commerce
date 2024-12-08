@@ -1,0 +1,127 @@
+/* Blog management styles */
+.blog-thumbnail {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.no-image {
+    width: 80px;
+    height: 60px;
+    background: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 0.8rem;
+}
+
+.image-preview {
+    max-width: 300px;
+    margin-top: 1rem;
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Rich Text Editor */
+.rich-editor {
+    min-height: 300px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+/* Status Badge Styles */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.badge.bg-success {
+    background: linear-gradient(45deg, #28a745, #20c997) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(45deg, #ffc107, #fd7e14) !important;
+}
+
+/* Modal Customization */
+.modal-lg {
+    max-width: 900px;
+}
+
+.modal-header {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* Form Styling */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.1);
+}
+
+/* Table Customization */
+.table th {
+    background: var(--primary-gradient);
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Button Styling */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+    transition: all 0.2s ease;
+}
+
+.btn-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .blog-thumbnail {
+        width: 60px;
+        height: 45px;
+    }
+    
+    .modal-lg {
+        margin: 0.5rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+}
