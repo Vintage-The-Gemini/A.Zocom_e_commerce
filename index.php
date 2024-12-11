@@ -30,6 +30,11 @@ foreach ($categories as $category) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Shop for quality safety equipment at Zocom Limited. Wide range of protective gear including foot, head, hand protection and more.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>Zocom Limited</title>
 
     <!-- Google Fonts -->
@@ -110,7 +115,7 @@ foreach ($categories as $category) {
                 <a href="shop.php" class="popular__more-button">View All Products</a>
             </div>
         </section>
-
+        <!-- 
         <section class="offers">
             <div class="offers-background"></div>
             <div class="container">
@@ -142,7 +147,7 @@ foreach ($categories as $category) {
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
         <section id="new-testimonials" class="py-5">
             <div class="container my-5">
                 <h2 class="text-center mb-4 gradient-text">What Our Clients Say</h2>
@@ -239,6 +244,35 @@ foreach ($categories as $category) {
             document.querySelector('.navbar__menu').classList.toggle('show');
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.navbar__toggle');
+            const menu = document.querySelector('.navbar__menu');
+
+            menuToggle.addEventListener('click', function() {
+                menu.classList.toggle('show');
+                menuToggle.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target) && !menuToggle.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menuToggle.classList.remove('active');
+                }
+            });
+
+            // Close menu when window resized to desktop size
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    menu.classList.remove('show');
+                    menuToggle.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

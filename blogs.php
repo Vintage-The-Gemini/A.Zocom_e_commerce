@@ -59,6 +59,11 @@ if (!$result) {
     <!-- Meta tags -->
     <meta name="description" content="Latest insights on safety equipment and workplace safety from Zocom Limited">
     <meta name="keywords" content="safety equipment, workplace safety, PPE, safety guidelines">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Shop for quality safety equipment at Zocom Limited. Wide range of protective gear including foot, head, hand protection and more.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Stylesheets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">

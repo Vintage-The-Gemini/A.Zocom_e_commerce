@@ -1,0 +1,468 @@
+/* Contact Page Styles */
+.contact-page {
+    padding-top: 20px;
+}
+
+/* Hero Section */
+.contact-hero {
+    background: #0F172A;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.gradient-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #60A5FA, #E879F9, #60A5FA);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1.5rem;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: #94A3B8;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Geometric Shapes */
+.geometric-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.1;
+    background: linear-gradient(135deg, #60A5FA, #E879F9);
+}
+
+.shape-1 {
+    width: 100px;
+    height: 100px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    top: 10%;
+    left: 10%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-2 {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    top: 60%;
+    right: 15%;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+.shape-3 {
+    width: 70px;
+    height: 70px;
+    transform: rotate(45deg);
+    top: 30%;
+    right: 25%;
+    animation: float 7s ease-in-out infinite;
+}
+
+.shape-4 {
+    width: 120px;
+    height: 120px;
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+    bottom: 20%;
+    left: 20%;
+    animation: float 9s ease-in-out infinite;
+}
+
+/* Contact Information Section */
+.contact-info {
+    background: linear-gradient(to bottom, #0F172A, #1E293B);
+    padding: 80px 0;
+    color: white;
+}
+
+.office-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.office-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.office-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.office-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #60A5FA, #E879F9);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.office-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.detail-item i {
+    color: #60A5FA;
+    font-size: 1.2rem;
+    margin-top: 5px;
+}
+
+.detail-content h3 {
+    font-size: 1rem;
+    color: #94A3B8;
+    margin-bottom: 5px;
+}
+
+.detail-content p {
+    margin: 0;
+    color: white;
+    line-height: 1.5;
+}
+
+.map-container {
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 250px;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Contact Form Section */
+.contact-form-section {
+    background: #f8fafc;
+    padding: 80px 0;
+}
+
+.form-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-header h2 {
+    color: #1e3c72;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.form-header p {
+    color: #64748b;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field label {
+    color: #1e3c72;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-field input,
+.form-field textarea {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: #60A5FA;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    background: white;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn i {
+    transition: transform 0.3s ease;
+}
+
+.submit-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Success Message Styles */
+.success-message {
+position: fixed;
+top: 20px;
+right: 20px;
+background: white;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+display: flex;
+align-items: center;
+gap: 12px;
+z-index: 1000;
+animation: slideIn 0.3s ease forwards;
+}
+
+.success-message i {
+color: #10B981;
+font-size: 1.5rem;
+}
+
+/* Loading State */
+.submit-btn.loading {
+position: relative;
+pointer-events: none;
+}
+
+.submit-btn.loading span {
+opacity: 0;
+}
+
+.submit-btn.loading::after {
+content: '';
+position: absolute;
+width: 20px;
+height: 20px;
+border: 2px solid white;
+border-top-color: transparent;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+position: fixed;
+bottom: 30px;
+right: 30px;
+background: #25D366;
+color: white;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+transition: all 0.3s ease;
+z-index: 100;
+}
+
+.whatsapp-btn:hover {
+transform: translateY(-5px);
+box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* Animations */
+@keyframes float {
+0%, 100% {
+    transform: translateY(0);
+}
+50% {
+    transform: translateY(-20px);
+}
+}
+
+@keyframes spin {
+to {
+    transform: rotate(360deg);
+}
+}
+
+@keyframes slideIn {
+from {
+    transform: translateX(100%);
+    opacity: 0;
+}
+to {
+    transform: translateX(0);
+    opacity: 1;
+}
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+.gradient-title {
+    font-size: 2.8rem;
+}
+
+.contact-hero {
+    padding: 80px 0;
+}
+
+.office-cards {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+}
+}
+
+@media (max-width: 768px) {
+.gradient-title {
+    font-size: 2.2rem;
+}
+
+.input-group {
+    grid-template-columns: 1fr;
+}
+
+.form-wrapper {
+    padding: 30px 20px;
+    margin: 0 20px;
+}
+
+.shape {
+    transform: scale(0.7);
+}
+
+.whatsapp-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    bottom: 20px;
+    right: 20px;
+}
+}
+
+@media (max-width: 576px) {
+.gradient-title {
+    font-size: 1.8rem;
+}
+
+.hero-content p {
+    font-size: 1rem;
+}
+
+.office-card {
+    padding: 20px;
+}
+
+.office-header h2 {
+    font-size: 1.5rem;
+}
+
+.map-container {
+    height: 200px;
+}
+
+.contact-form-section {
+    padding: 40px 0;
+}
+}
+
+/* Print Styles */
+@media print {
+.contact-hero,
+.whatsapp-btn,
+.geometric-shapes {
+    display: none;
+}
+
+.office-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+.shape,
+.submit-btn,
+.whatsapp-btn {
+    animation: none;
+    transition: none;
+}
+}

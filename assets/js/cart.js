@@ -2,9 +2,17 @@
 function addToCart(event, product) {
     event.preventDefault();
     
+    if (!product || !product.product_id) {
+        console.error('Invalid product data', product);
+        showErrorToast('Invalid product data');
+        return;
+    }
+    
     fetch('handlers/cart_handler.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             action: 'add',
             productId: product.product_id,
@@ -21,12 +29,14 @@ function addToCart(event, product) {
             if (modal) modal.hide();
             showSuccessToast(`${product.product_name} added to cart`);
         } else {
-            showErrorToast('Failed to add product to cart');
+            showErrorToast(data.error || 'Failed to add product to cart');
         }
     })
-    .catch(error => showErrorToast('An error occurred'));
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorToast('An error occurred while adding to cart');
+    });
 }
-
 // Enhanced toast notifications
 function showSuccessToast(message) {
     createToast(message, 'success', 'check-circle');
@@ -272,9 +282,13 @@ function updateCartCount(count) {
     });
 }
 
-// Add to cart functionality
 function addToCart(event, product) {
     event.preventDefault();
+    
+    if (!product || !product.product_id) {
+        console.error('Invalid product data');
+        return;
+    }
     
     fetch('handlers/cart_handler.php', {
         method: 'POST',
@@ -298,9 +312,11 @@ function addToCart(event, product) {
             showErrorToast('Failed to add product to cart');
         }
     })
-    .catch(error => showErrorToast('An error occurred'));
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorToast('An error occurred');
+    });
 }
-
 
 
 // Update the orderViaWhatsApp function in cart.js

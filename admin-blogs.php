@@ -218,7 +218,43 @@ $blogs = mysqli_query($conn, $query);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/admin.js"></script>
     <script>
-        // Blog management functions
+        // Toast notification helper
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `custom-toast ${type}-toast`;
+            toast.innerHTML = `
+        <div class="toast-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+            const container = document.querySelector('.toast-container');
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Image preview helper
+        function setupImagePreview(input, previewElement) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (previewElement.tagName === 'IMG') {
+                        previewElement.src = e.target.result;
+                        previewElement.style.display = 'block';
+                    } else {
+                        previewElement.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto;">`;
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add new blog
         function saveBlog() {
             const form = document.getElementById('addBlogForm');
             if (!form.checkValidity()) {
@@ -244,9 +280,31 @@ $blogs = mysqli_query($conn, $query);
                         showToast(data.error || 'Failed to add blog post', 'error');
                     }
                 })
-                .catch(error => showToast('An error occurred', 'error'));
+                .catch(error => {
+                    console.error('Save error:', error);
+                    showToast('An error occurred', 'error');
+                });
         }
 
+        // Edit blog
+        function editBlog(id) {
+            fetch(`server/blog_handler.php?action=get&id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        populateEditForm(data.blog);
+                        new bootstrap.Modal(document.getElementById('editBlogModal')).show();
+                    } else {
+                        showToast(data.error || 'Failed to load blog post', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Edit error:', error);
+                    showToast('An error occurred', 'error');
+                });
+        }
+
+        // Populate edit form
         function populateEditForm(blog) {
             const form = document.getElementById('editBlogForm');
             form.blog_id.value = blog.id;
@@ -266,19 +324,14 @@ $blogs = mysqli_query($conn, $query);
             }
         }
 
-        function editBlog(id) {
-            fetch(`server/blog_handler.php?action=get&id=${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        populateEditForm(data.blog);
-                        new bootstrap.Modal(document.getElementById('editBlogModal')).show();
-                    }
-                });
-        }
-
+        // Update blog
         function updateBlog() {
             const form = document.getElementById('editBlogForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             const formData = new FormData(form);
             formData.append('action', 'update');
 
@@ -290,13 +343,24 @@ $blogs = mysqli_query($conn, $query);
                 .then(data => {
                     if (data.success) {
                         showToast('Blog post updated successfully');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editBlogModal'));
+                        modal.hide();
                         setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showToast(data.error || 'Failed to update blog post', 'error');
                     }
+                })
+                .catch(error => {
+                    console.error('Update error:', error);
+                    showToast('An error occurred', 'error');
                 });
         }
 
+        // Delete blog
         function deleteBlog(id) {
-            if (!confirm('Are you sure you want to delete this blog post?')) return;
+            if (!confirm('Are you sure you want to delete this blog post?')) {
+                return;
+            }
 
             fetch('server/blog_handler.php', {
                     method: 'POST',
@@ -317,23 +381,87 @@ $blogs = mysqli_query($conn, $query);
                         showToast(data.error || 'Failed to delete blog post', 'error');
                     }
                 })
-                .catch(error => showToast('An error occurred', 'error'));
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    showToast('An error occurred', 'error');
+                });
         }
 
-        // Initialize image preview functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const imageInputs = document.querySelectorAll('input[type="file"]');
-            imageInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const preview = this.parentElement.querySelector('.image-preview');
-                    if (preview && this.files && this.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = e => {
-                            preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                        };
-                        reader.readAsDataURL(this.files[0]);
+        // View blog details
+        function viewBlog(id) {
+            fetch(`server/blog_handler.php?action=get&id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const blog = data.blog;
+                        const modalContent = `
+                    <div class="row">
+                        <div class="col-md-12">
+                            ${blog.featured_image ? 
+                                `<img src="${blog.featured_image}" alt="${blog.title}" class="img-fluid mb-3">` : 
+                                ''}
+                            <h3>${blog.title}</h3>
+                            <p class="text-muted">
+                                <small>
+                                    <i class="fas fa-user"></i> ${blog.author} | 
+                                    <i class="fas fa-calendar"></i> ${new Date(blog.created_at).toLocaleDateString()} | 
+                                    <i class="fas fa-folder"></i> ${blog.category}
+                                </small>
+                            </p>
+                            <p><strong>Excerpt:</strong></p>
+                            <p>${blog.excerpt}</p>
+                            <p><strong>Content:</strong></p>
+                            <div>${blog.content}</div>
+                        </div>
+                    </div>
+                `;
+
+                        document.querySelector('#viewBlogModal .modal-body').innerHTML = modalContent;
+                        new bootstrap.Modal(document.getElementById('viewBlogModal')).show();
+                    } else {
+                        showToast(data.error || 'Failed to load blog post', 'error');
                     }
+                })
+                .catch(error => {
+                    console.error('View error:', error);
+                    showToast('An error occurred', 'error');
                 });
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup image preview for add form
+            const addImageInput = document.querySelector('#addBlogForm input[type="file"]');
+            if (addImageInput) {
+                addImageInput.addEventListener('change', function() {
+                    setupImagePreview(this, this.parentElement.querySelector('.image-preview'));
+                });
+            }
+
+            // Setup image preview for edit form
+            const editImageInput = document.querySelector('#editBlogForm input[type="file"]');
+            if (editImageInput) {
+                editImageInput.addEventListener('change', function() {
+                    setupImagePreview(this, this.parentElement.querySelector('.image-preview'));
+                });
+            }
+
+            // Reset forms when modals are closed
+            ['addBlogModal', 'editBlogModal'].forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.addEventListener('hidden.bs.modal', function() {
+                        const form = this.querySelector('form');
+                        if (form) {
+                            form.reset(); // Reset the form inputs
+                            const previewElement = form.querySelector('.image-preview img');
+                            if (previewElement) {
+                                previewElement.src = ''; // Clear the image preview
+                                previewElement.style.display = 'none';
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

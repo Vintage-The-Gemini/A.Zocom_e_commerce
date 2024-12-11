@@ -1244,3 +1244,73 @@ html {
         padding-top: 65%;
     }
 }
+
+/* Navbar Fix */
+.navbar {
+    z-index: 1000;  /* Increased z-index */
+}
+
+.navbar__menu {
+    z-index: 1001;  /* Higher than navbar */
+}
+
+.navbar__menu.show {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero {
+    min-height: 100vh;
+}
+
+.hero__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    gap: 3rem;
+}
+
+@media (max-width: 992px) {
+    .hero__left {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .hero__title {
+        font-size: clamp(2.5rem, 5vw, 3rem);
+    }
+    
+    .hero__description {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+}
+
+#new-testimonials {
+    padding: 4rem 0;
+    margin: 2rem 0;
+}
+
+.neumorphic-card {
+    height: 100%;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    #new-testimonials {
+        padding: 3rem 0;
+    }
+    
+    .neumorphic-card {
+        margin-bottom: 0;
+    }
+    
+    .row.g-4 {
+        margin: 0 1rem;
+    }
+}
