@@ -1,4 +1,3 @@
-```php
 <?php
 // admin/blogs.php
 session_start();
@@ -11,20 +10,28 @@ if (!isset($_SESSION['admin_id'])) {
 
 $page_title = 'Blog Management';
 
+// Define blog categories
+$blog_categories = [
+    'Industry Insights' => 'Industry insights and market trends',
+    'Safety Guidelines' => 'Safety protocols and guidelines',
+    'Best Practices' => 'Industry best practices and recommendations'
+];
+
 // Get blog statistics
 $total_blogs = $conn->query("SELECT COUNT(*) as count FROM blogs")->fetch_assoc()['count'];
 $published_blogs = $conn->query("SELECT COUNT(*) as count FROM blogs WHERE status = 'published'")->fetch_assoc()['count'];
 $draft_blogs = $conn->query("SELECT COUNT(*) as count FROM blogs WHERE status = 'draft'")->fetch_assoc()['count'];
 
-// Get blog categories
-$categories_query = "SELECT * FROM blog_categories";
+// Get category statistics
+$categories_query = "SELECT category, COUNT(*) as count 
+                    FROM blogs 
+                    WHERE category IS NOT NULL 
+                    AND category != ''
+                    GROUP BY category";
 $categories = $conn->query($categories_query);
 
 // Get all blogs with category info
-$blogs_query = "SELECT blogs.*, blog_categories.name as category_name 
-                FROM blogs 
-                LEFT JOIN blog_categories ON blogs.category = blog_categories.id 
-                ORDER BY created_at DESC";
+$blogs_query = "SELECT * FROM blogs ORDER BY created_at DESC";
 $blogs = $conn->query($blogs_query);
 
 include 'includes/header.php';
@@ -117,7 +124,18 @@ include 'includes/header.php';
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars($blog['category_name']); ?></td>
+                                        <td>
+                                            <span class="badge bg-<?php
+                                                                    echo match ($blog['category']) {
+                                                                        'Industry Insights' => 'primary',
+                                                                        'Safety Guidelines' => 'success',
+                                                                        'Best Practices' => 'info',
+                                                                        default => 'secondary'
+                                                                    };
+                                                                    ?>">
+                                                <?php echo htmlspecialchars($blog['category'] ?: 'Uncategorized'); ?>
+                                            </span>
+                                        </td>
                                         <td><?php echo htmlspecialchars($blog['author']); ?></td>
                                         <td>
                                             <span class="badge bg-<?php echo $blog['status'] === 'published' ? 'success' : 'warning'; ?>">
@@ -170,11 +188,12 @@ include 'includes/header.php';
                             <label for="category" class="form-label">Category</label>
                             <select class="form-select" id="category" name="category" required>
                                 <option value="">Select Category</option>
-                                <?php while ($category = $categories->fetch_assoc()): ?>
-                                    <option value="<?php echo $category['id']; ?>">
-                                        <?php echo htmlspecialchars($category['name']); ?>
+                                <?php foreach ($blog_categories as $cat_key => $cat_desc): ?>
+                                    <option value="<?php echo htmlspecialchars($cat_key); ?>"
+                                        title="<?php echo htmlspecialchars($cat_desc); ?>">
+                                        <?php echo htmlspecialchars($cat_key); ?>
                                     </option>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -219,6 +238,65 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<!-- Custom Styles -->
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 0.8em;
+        font-weight: 500;
+    }
+
+    .btn-group {
+        gap: 0.25rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #2a5298;
+        box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
+    }
+
+    #current_image img {
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-responsive {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -301,7 +379,6 @@ include 'includes/header.php';
                 }
             });
         });
-
         // Save Blog
         blogForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -324,43 +401,152 @@ include 'includes/header.php';
                     showToast(result.message || 'Error saving blog post', 'error');
                 }
             } catch (error) {
+                console.error('Error:', error);
                 showToast('Error saving blog post', 'error');
             }
         });
-    });
 
-    // Toast notification function
-    function showToast(message, type = 'success') {
-        const toastContainer = document.querySelector('.toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast align-items-center border-0 bg-${type} text-white fade show`;
-        toast.setAttribute('role', 'alert');
-        toast.setAttribute('aria-live', 'assertive');
-        toast.setAttribute('aria-atomic', 'true');
+        // Featured Image Preview
+        document.getElementById('featured_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.querySelector('#current_image img');
+                    img.src = e.target.result;
+                    document.getElementById('current_image').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
-        const toastBody = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
-                ${message}
+        // Input Validation
+        const validateInputs = () => {
+            const title = document.getElementById('title').value.trim();
+            const excerpt = document.getElementById('excerpt').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const category = document.getElementById('category').value;
+            const author = document.getElementById('author').value.trim();
+
+            let isValid = true;
+            let errors = [];
+
+            if (title.length < 5) {
+                errors.push('Title must be at least 5 characters long');
+                isValid = false;
+            }
+
+            if (excerpt.length < 10) {
+                errors.push('Excerpt must be at least 10 characters long');
+                isValid = false;
+            }
+
+            if (content.length < 50) {
+                errors.push('Content must be at least 50 characters long');
+                isValid = false;
+            }
+
+            if (!category) {
+                errors.push('Please select a category');
+                isValid = false;
+            }
+
+            if (!author) {
+                errors.push('Author name is required');
+                isValid = false;
+            }
+
+            return {
+                isValid,
+                errors
+            };
+        };
+
+        // Form Validation Before Submit
+        blogForm.addEventListener('submit', function(e) {
+            const {
+                isValid,
+                errors
+            } = validateInputs();
+
+            if (!isValid) {
+                e.preventDefault();
+                errors.forEach(error => showToast(error, 'error'));
+            }
+        });
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                const container = document.createElement('div');
+                container.className = 'toast-container position-fixed top-0 end-0 p-3';
+                document.body.appendChild(container);
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center border-0 bg-${type} text-white fade show`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            const toastBody = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
+        `;
 
-        toast.innerHTML = toastBody;
-        toastContainer.appendChild(toast);
+            toast.innerHTML = toastBody;
+            toastContainer.appendChild(toast);
 
-        const bsToast = new bootstrap.Toast(toast, {
-            delay: 3000
+            const bsToast = new bootstrap.Toast(toast, {
+                delay: 3000
+            });
+
+            bsToast.show();
+
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
-        bsToast.show();
-
-        toast.addEventListener('hidden.bs.toast', () => {
-            toast.remove();
+        // Handle modal close
+        document.getElementById('blogModal').addEventListener('hidden.bs.modal', function() {
+            blogForm.reset();
+            document.getElementById('current_image').style.display = 'none';
         });
-    }
+
+        // Add loading states to buttons
+        const addLoadingState = (button) => {
+            button.disabled = true;
+            const originalContent = button.innerHTML;
+            button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`;
+            return originalContent;
+        };
+
+        const removeLoadingState = (button, originalContent) => {
+            button.disabled = false;
+            button.innerHTML = originalContent;
+        };
+
+        // Handle text area auto-resize
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    });
 </script>
 
 <?php include 'includes/footer.php'; ?>

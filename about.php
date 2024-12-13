@@ -5,34 +5,72 @@ session_start();
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-K9SX33NJ');
+    </script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Shop for quality safety equipment at Zocom Limited. Wide range of protective gear including foot, head, hand protection and more.">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>Zocom Limited</title>
 
-    <!-- Google Fonts -->
+    <!-- Favicon -->
+    <link rel="icon" href="images/zocom no bg logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="images/zocom no bg logo.png">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="About Us - Zocom Limited">
+    <meta name="description" content="Learn about Zocom Limited, your trusted partner in safety solutions since 1995. Leading supplier of quality safety equipment in Kenya.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.zocomlimited.co.ke/about">
+    <meta property="og:title" content="About Zocom Limited - Your Safety Partner">
+    <meta property="og:description" content="Your trusted partner in safety solutions since 1995. Learn about our commitment to workplace safety and quality protection equipment.">
+    <meta property="og:image" content="images/zocom no bg logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.zocomlimited.co.ke/about">
+    <meta property="twitter:title" content="About Zocom Limited - Your Safety Partner">
+    <meta property="twitter:description" content="Your trusted partner in safety solutions since 1995. Learn about our commitment to workplace safety and quality protection equipment.">
+    <meta property="twitter:image" content="images/zocom no bg logo.png">
+
+    <title>About Us - Zocom Limited</title>
+
+    <!-- Your existing CSS links -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- Custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/about.css">
-
-    <!-- Add these in your HTML head section -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9SX33NJ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <?php include 'components/navbar.php'; ?>
 
     <!-- Continuing from your base template -->

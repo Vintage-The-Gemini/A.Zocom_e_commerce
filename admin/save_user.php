@@ -3,28 +3,27 @@
 session_start();
 require_once '../server/connection.php';
 
+header('Content-Type: application/json');
+
 if (!isset($_SESSION['admin_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
 
-$response = ['success' => false, 'message' => ''];
-
 try {
-    $user_id = $_POST['user_id'] ?? null;
-    $is_edit = !empty($user_id);
-
     // Validate required fields
-    if (empty($_POST['username']) || empty($_POST['email']) || empty($_POST['role_id'])) {
-        throw new Exception('Username, email and role are required');
+    if (empty($_POST['username']) || empty($_POST['email'])) {
+        throw new Exception('Username and email are required');
     }
 
-    // Validate email
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         throw new Exception('Invalid email format');
     }
 
-    // Check if username/email already exists
+    $user_id = $_POST['user_id'] ?? null;
+    $is_edit = !empty($user_id);
+
+    // Check for existing username/email
     $check_query = "SELECT id FROM admin_users WHERE (username = ? OR email = ?) AND id != ?";
     $check_stmt = $conn->prepare($check_query);
     $check_stmt->bind_param('ssi', $_POST['username'], $_POST['email'], $user_id ?: 0);
@@ -34,18 +33,14 @@ try {
     }
 
     if ($is_edit) {
+        // Update existing user
         $query = "UPDATE admin_users SET 
                   username = ?, 
                   email = ?,
                   role_id = ?,
                   status = ?";
 
-        $params = [
-            $_POST['username'],
-            $_POST['email'],
-            $_POST['role_id'],
-            $_POST['status']
-        ];
+        $params = [$_POST['username'], $_POST['email'], $_POST['role_id'], $_POST['status']];
         $types = "ssis";
 
         // Add password to update if provided
@@ -62,15 +57,13 @@ try {
         $stmt = $conn->prepare($query);
         $stmt->bind_param($types, ...$params);
     } else {
-        // New user requires password
+        // Create new user
         if (empty($_POST['password'])) {
             throw new Exception('Password is required for new users');
         }
 
-        $query = "INSERT INTO admin_users (username, email, password, role_id, status) 
-                  VALUES (?, ?, ?, ?, ?)";
-
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $query = "INSERT INTO admin_users (username, email, password, role_id, status) VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($query);
         $stmt->bind_param(
@@ -83,14 +76,15 @@ try {
         );
     }
 
-    if ($stmt->execute()) {
-        $response['success'] = true;
-        $response['message'] = $is_edit ? 'User updated successfully' : 'User created successfully';
-    } else {
-        throw new Exception("Database error");
+    if (!$stmt->execute()) {
+        throw new Exception($stmt->error);
     }
-} catch (Exception $e) {
-    $response['message'] = $e->getMessage();
-}
 
-echo json_encode($response);
+    echo json_encode([
+        'success' => true,
+        'message' => $is_edit ? 'User updated successfully' : 'User created successfully'
+    ]);
+} catch (Exception $e) {
+    error_log("Error in save_user.php: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
