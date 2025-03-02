@@ -1020,3 +1020,60 @@
     background: rgba(42, 82, 152, 0.1);
     transform: translateX(5px);
 }
+
+@media (max-width: 992px) {
+    .shop__grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .shop__grid {
+        grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
+        gap: 12px;
+        padding: 0 10px;
+    }
+
+    .shop__card {
+        max-width: none; /* Remove max-width restriction */
+    }
+
+    .shop__card-content {
+        padding: 12px;
+    }
+
+    .shop__card-title {
+        font-size: 1rem;
+    }
+
+    .shop__card-brand {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .shop__container {
+        padding: 0 10px;
+    }
+
+    .shop__grid {
+        grid-template-columns: repeat(2, 1fr); /* Maintain 2 columns */
+        gap: 10px;
+    }
+
+    .shop__card-actions {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    .shop__card-btn,
+    .shop__card-whatsapp {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .shop__card-image {
+        padding-top: 100%; /* Make images square */
+    }
+}

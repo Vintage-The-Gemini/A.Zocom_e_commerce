@@ -186,10 +186,9 @@ if (!$result) {
                                     <?php echo date('M d, Y', strtotime($blog['created_at'])); ?>
                                 </span>
                             </div>
-                            <button class="read-more mt-3"
-                                onclick="openBlogModal(<?php echo $blog['id']; ?>)">
+                            <a href="blog-detail.php?id=<?php echo $blog['id']; ?>" class="read-more mt-3">
                                 Read More <i class="fas fa-arrow-right"></i>
-                            </button>
+                            </a>
                         </div>
                     </article>
                 <?php endwhile; ?>
