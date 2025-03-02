@@ -1,13 +1,32 @@
+# Turn on the rewrite engine
 RewriteEngine On
 
-# Handle the shop page specifically 
-RewriteRule ^shop$ shop.php [L]
+# Ensure mod_rewrite is enabled
+<IfModule mod_rewrite.c>
+    # Handle www to non-www redirect (optional)
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    
+    # If requested resource exists as a file or directory, skip the following rules
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    
+    # Redirect requests with .php extension to non-php URLs
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,NE,L]
+    
+    # Internally rewrite clean URLs to their PHP scripts
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+?)/?$ $1.php [L]
+</IfModule>
 
-# Handle homepage
-RewriteRule ^$ index.php [L]
+# Set default index file
+DirectoryIndex index.php
 
-# Remove PHP extension from URLs
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([^\.]+)$ $1.php [NC,L]
+# Disable directory browsing
+Options -Indexes
+
+# Set default character set
+AddDefaultCharset UTF-8
