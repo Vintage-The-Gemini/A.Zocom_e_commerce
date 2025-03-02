@@ -1,116 +1,59 @@
-<?php
-// Ensure proper asset loading with root-relative paths
-$current_page = basename($_SERVER['PHP_SELF'], '.php');
-?>
-
-<link rel="stylesheet" href="/assets/css/footer.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+<!-- Example footer update -->
 <footer class="footer">
     <div class="footer__container">
         <div class="footer__content">
-            <div class="footer__brand">
-                <img src="/images/zocom no bg logo.png" alt="Zocom Limited" class="logo">
+            <div class="footer__info">
+                <img src="images/zocom no bg logo.png" alt="Zocom Limited" class="logo">
+                <p>Your trusted partner in safety solutions. Providing quality safety equipment since 1995.</p>
+                <!-- Social media links -->
+                <div class="footer__social">
+                    <a href="#" class="footer__social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="footer__social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="footer__social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer__social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
             </div>
 
             <div class="footer__data">
-                <div class="footer__section">
-                    <h3 class="footer__title">About</h3>
+                <div class="footer__links-section">
+                    <h3 class="footer__title">Quick Links</h3>
                     <ul class="footer__links">
-                        <li>
-                            <a href="/about" class="footer__link">About Us</a>
-                        </li>
+                        <li><a href="/" class="footer__link">Home</a></li>
+                        <li><a href="/shop" class="footer__link">Shop</a></li>
+                        <li><a href="/about" class="footer__link">About Us</a></li>
+                        <li><a href="/blogs" class="footer__link">Blog</a></li>
+                        <li><a href="/contacts" class="footer__link">Contact</a></li>
                     </ul>
                 </div>
 
-                <div class="footer__section">
-                    <h3 class="footer__title">Company</h3>
+                <div class="footer__links-section">
+                    <h3 class="footer__title">Categories</h3>
                     <ul class="footer__links">
-                        <li>
-                            <a href="/about#why-choose-us" class="footer__link">Why Choose Us</a>
-                        </li>
-                        <li>
-                            <a href="/about#partners" class="footer__link">Our Partners</a>
-                        </li>
+                        <li><a href="/shop#foot-protection" class="footer__link">Foot Protection</a></li>
+                        <li><a href="/shop#head-protection" class="footer__link">Head Protection</a></li>
+                        <li><a href="/shop#hand-protection" class="footer__link">Hand Protection</a></li>
+                        <li><a href="/shop#eye-protection" class="footer__link">Eye Protection</a></li>
+                        <li><a href="/shop#respiratory-protection" class="footer__link">Respiratory Protection</a></li>
                     </ul>
                 </div>
 
-                <div class="footer__section">
-                    <h3 class="footer__title">Products</h3>
+                <div class="footer__links-section">
+                    <h3 class="footer__title">Contact</h3>
                     <ul class="footer__links">
-                        <li>
-                            <a href="/shop" class="footer__link">Most Popular</a>
-                        </li>
-                        <li>
-                            <a href="/shop#new-arrivals" class="footer__link">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="/shop#safety-products" class="footer__link">Safety Products</a>
-                        </li>
+                        <li><i class="fas fa-map-marker-alt"></i> Mandera Road, Kileleshwa, Nairobi</li>
+                        <li><i class="fas fa-phone"></i> +254 738 424 529</li>
+                        <li><i class="fas fa-envelope"></i> info@zocomlimited.co.ke</li>
                     </ul>
-                </div>
-
-                <div class="footer__section">
-                    <h3 class="footer__title">Follow Us</h3>
-                    <div class="footer__social">
-                        <a href="https://www.facebook.com/zocomltd/"
-                            target="_blank"
-                            class="footer__social-link facebook"
-                            aria-label="Facebook">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="https://www.instagram.com/zocomlimited/"
-                            target="_blank"
-                            class="footer__social-link instagram"
-                            aria-label="Instagram">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/company/zocom-limited/?viewAsMember=true"
-                            target="_blank"
-                            class="footer__social-link linkedin"
-                            aria-label="LinkedIn">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://www.youtube.com/channel/UCMXidOGnoybsb0PkQAalfhA"
-                            target="_blank"
-                            class="footer__social-link youtube"
-                            aria-label="YouTube">
-                            <i class="fa-brands fa-youtube"></i>
-                        </a>
-                        <a href="https://x.com/ZocomLimited"
-                            target="_blank"
-                            class="footer__social-link x-twitter"
-                            aria-label="X (Twitter)">
-                            <i class="fa-brands fa-x-twitter"></i>
-                        </a>
-                        <a href="https://www.tiktok.com/@zocomltd"
-                            target="_blank"
-                            class="footer__social-link tiktok"
-                            aria-label="TikTok">
-                            <i class="fa-brands fa-tiktok"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="footer__group">
-                <div class="footer__terms">
-                    <a href="/terms">Terms & Agreements</a>
-                    <a href="/privacy">Privacy Policy</a>
-                </div>
-                <span class="footer__copy">
-                    &copy; <?php echo date('Y'); ?> Zocom Limited. All rights reserved
-                </span>
+        <div class="footer__group">
+            <div class="footer__terms">
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/terms">Terms & Conditions</a>
             </div>
+            <p class="footer__copy">© <?php echo date('Y'); ?> Zocom Limited. All rights reserved.</p>
         </div>
     </div>
 </footer>
-
-<!-- Load scripts based on page needs -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<?php if ($current_page === 'shop'): ?>
-    <script src="/assets/js/cart.js"></script>
-<?php endif; ?>
-
-<script src="/assets/js/navbar.js"></script>

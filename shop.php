@@ -331,6 +331,78 @@ require_once 'server/get_featured_products.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+
+    <script>
+        // Add this to your shop.js file or add as inline script on the shop.php page
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there's a hash in the URL and navigate to that category
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const targetLink = document.querySelector(`.shop__category-link[href="#${targetId}"]`);
+
+                if (targetLink) {
+                    // Simulate a click on the category link
+                    setTimeout(function() {
+                        targetLink.click();
+                    }, 100);
+                }
+            }
+
+            // Listen for hash changes and navigate to appropriate category
+            window.addEventListener('hashchange', function() {
+                if (window.location.hash) {
+                    const targetId = window.location.hash.substring(1);
+                    const targetLink = document.querySelector(`.shop__category-link[href="#${targetId}"]`);
+
+                    if (targetLink) {
+                        targetLink.click();
+                    }
+                }
+            });
+
+            // Make sure all category links work properly
+            document.querySelectorAll('.shop__category-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+
+                    // Deactivate all links
+                    document.querySelectorAll('.shop__category-link').forEach(l =>
+                        l.classList.remove('active'));
+
+                    // Activate this link
+                    this.classList.add('active');
+
+                    // Hide all grids
+                    document.querySelectorAll('.shop__grid').forEach(grid => {
+                        grid.classList.remove('active');
+                        grid.style.display = 'none';
+                    });
+
+                    // Show target grid
+                    const targetGrid = document.getElementById(targetId);
+                    if (targetGrid) {
+                        targetGrid.classList.add('active');
+                        targetGrid.style.display = 'grid';
+
+                        // Update the URL hash without scrolling
+                        history.pushState(null, null, `#${targetId}`);
+
+                        // Scroll to the grid with offset for header
+                        const headerOffset = 100; // Adjust based on your header height
+                        const gridPosition = targetGrid.getBoundingClientRect().top;
+                        const offsetPosition = gridPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
     <script src="assets/js/cart.js" defer></script>
     <script src="assets/js/shop.js" defer></script>
 

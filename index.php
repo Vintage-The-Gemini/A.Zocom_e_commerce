@@ -118,6 +118,7 @@ foreach ($categories as $category) {
         </section>
 
         <!-- Popular Products Section -->
+        <!-- Popular Products Section -->
         <section class="popular" id="popular">
             <div class="popular__container">
                 <div class="popular__header">
@@ -142,7 +143,7 @@ foreach ($categories as $category) {
                                                                         ?></p>
                                 <a href="shop.php#<?php echo strtolower(str_replace(' ', '-', $category)); ?>"
                                     class="popular__button">
-                                    <span>View Category</span>
+                                    <span>View <?php echo htmlspecialchars($category); ?></span>
                                     <i class="fas fa-arrow-right"></i>
                                 </a>
                             </div>
