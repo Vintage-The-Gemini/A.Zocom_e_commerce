@@ -118,7 +118,6 @@ foreach ($categories as $category) {
         </section>
 
         <!-- Popular Products Section -->
-        <!-- Popular Products Section -->
         <section class="popular" id="popular">
             <div class="popular__container">
                 <div class="popular__header">
@@ -141,9 +140,9 @@ foreach ($categories as $category) {
                                 <p class="popular__description-text"><?php
                                                                         echo htmlspecialchars(substr($product['product_description'], 0, 100)) . '...';
                                                                         ?></p>
-                                <a href="shop#<?php echo strtolower(str_replace(' ', '-', $category)); ?>"
+                                <a href="shop.php#<?php echo strtolower(str_replace(' ', '-', $category)); ?>"
                                     class="popular__button">
-                                    <span>View <?php echo htmlspecialchars($category); ?></span>
+                                    <span>View Category</span>
                                     <i class="fas fa-arrow-right"></i>
                                 </a>
                             </div>
@@ -151,7 +150,7 @@ foreach ($categories as $category) {
                     <?php endforeach; ?>
                 </div>
 
-                <a href="shop" class="popular__more-button">View All Products</a>
+                <a href="shop.php" class="popular__more-button">View All Products</a>
             </div>
         </section>
         <!-- 

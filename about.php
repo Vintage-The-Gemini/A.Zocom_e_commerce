@@ -24,7 +24,7 @@ session_start();
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-K9SX33NJ');
     </script>
-    <!-- End Google Tag Manager -->
+    <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,6 +63,99 @@ session_start();
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/about.css">
+
+    <style>
+        /* Client Section Styles */
+        .clients-section {
+            padding: 80px 0;
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+            position: relative;
+        }
+
+        .clients-section h2 {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .clients-section .section-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        .client-card {
+            background: white;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .client-card img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            filter: grayscale(0.3);
+            transition: filter 0.3s ease;
+        }
+
+        .client-card:hover img {
+            filter: grayscale(0);
+        }
+
+        @media (max-width: 992px) {
+            .clients-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .clients-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .client-card {
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clients-section {
+                padding: 40px 0;
+            }
+
+            .clients-grid {
+                gap: 15px;
+            }
+
+            .client-card {
+                height: 100px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -70,13 +163,12 @@ session_start();
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9SX33NJ"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- End Google Tag Manager (noscript) -->
     <?php include 'components/navbar.php'; ?>
 
     <!-- Continuing from your base template -->
     <main class="about-page">
         <!-- Hero Section -->
-        <!-- Replace the existing hero section with this -->
         <section class="about-hero">
             <div class="container">
                 <div class="hero-content">
@@ -92,7 +184,7 @@ session_start();
             </div>
         </section>
 
-        <!-- Replace the image section with this new stats section -->
+        <!-- Stats Section -->
         <div class="stats-section">
             <div class="stats-container">
                 <div class="stat-card">
@@ -120,7 +212,6 @@ session_start();
         </div>
 
         <!-- About Section -->
-        <!-- Replace the existing about-content section with this -->
         <section class="about-content">
             <div class="container">
                 <div class="about-wrapper">
@@ -131,7 +222,6 @@ session_start();
                             <h2>Know More About Us</h2>
                             <div class="header-line"></div>
                         </div>
-
                     </div>
 
                     <!-- Timeline Cards -->
@@ -174,6 +264,36 @@ session_start();
                 </div>
             </div>
         </section>
+
+        <!-- Clients Section - NEW -->
+        <section class="clients-section">
+            <div class="container">
+                <h2>Our Esteemed Clients</h2>
+                <p class="section-subtitle">Trusted by industry leaders and organizations across Kenya</p>
+
+                <div class="clients-grid">
+                    <div class="client-card">
+                        <img src="images/Nairobi_Hospital_Logo.png" alt="The Nairobi Hospital">
+                    </div>
+                    <div class="client-card">
+                        <img src="images/TOTAL ENERGIES LOGO.svg" alt="Total Kenya PLC">
+                    </div>
+                    <div class="client-card">
+                        <img src="images/Kenya power logo.png" alt="Kenya Power">
+                    </div>
+                    <div class="client-card">
+                        <img src="images/agrochemical foods logo.png" alt="Agro-Chemical and Food Company Limited">
+                    </div>
+                    <div class="client-card">
+                        <img src="images/kengen logo.png" alt="KenGen">
+                    </div>
+                    <div class="client-card">
+                        <img src="images/KNH LOGO.png" alt="Kenyatta National Hospital">
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Partners Section -->
         <section class="partners-section">
             <div class="container">
@@ -210,7 +330,7 @@ session_start();
                     </a>
 
                     <a href="https://superhousegroup.com/" target="_blank" class="partner-card">
-                        <img src="logos/super_house_logo.png" alt="Super House">
+                        <img src="logos/super_house_logo.png" alt="Super House" class="superhouse">
                     </a>
                 </div>
             </div>
@@ -252,8 +372,6 @@ session_start();
     <?php include 'components/footer.php'; ?>
 
     <script>
-        // Add this at the bottom of your page before </body>
-
         document.addEventListener('DOMContentLoaded', function() {
             const parallaxImage = document.querySelector('.parallax-image');
             if (!parallaxImage) return;
@@ -268,6 +386,31 @@ session_start();
                     parallaxImage.style.transform = `translate3d(0, ${rate}px, 0)`;
                 }
             });
+
+            // Animation for client logos
+            const clientCards = document.querySelectorAll('.client-card');
+
+            function checkIfInView() {
+                clientCards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const isInView = (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                    );
+
+                    if (isInView) {
+                        card.classList.add('animated');
+                    }
+                });
+            }
+
+            // Initial check on page load
+            checkIfInView();
+
+            // Check on scroll
+            window.addEventListener('scroll', checkIfInView);
         });
     </script>
 </body>

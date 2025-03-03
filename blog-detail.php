@@ -21,7 +21,7 @@ if (!$result || mysqli_num_rows($result) === 0) {
 $blog = mysqli_fetch_assoc($result);
 
 // Get related blogs
-$related_query = "SELECT id, title, featured_image, created_at 
+$related_query = "SELECT id, title, excerpt, featured_image, created_at 
                  FROM blogs 
                  WHERE category = '" . mysqli_real_escape_string($conn, $blog['category']) . "'
                  AND id != '$blog_id' 
@@ -29,12 +29,88 @@ $related_query = "SELECT id, title, featured_image, created_at
                  ORDER BY created_at DESC 
                  LIMIT 3";
 $related_result = mysqli_query($conn, $related_query);
+
+// Get estimated reading time
+function getReadingTime($content)
+{
+    $word_count = str_word_count(strip_tags($content));
+    $minutes = floor($word_count / 200); // Average reading speed: 200 words per minute
+    if ($minutes < 1) {
+        return "Less than a minute";
+    } elseif ($minutes == 1) {
+        return "1 minute";
+    } else {
+        return $minutes . " minutes";
+    }
+}
+
+$reading_time = getReadingTime($blog['content']);
+
+// Format the content with proper HTML structure if it's not already formatted
+// This function cleans up the content and ensures proper paragraph and list formatting
+function formatBlogContent($content)
+{
+    // If content already has proper HTML structure, return as is
+    if (strpos($content, '<p>') !== false || strpos($content, '<h2>') !== false) {
+        return $content;
+    }
+
+    // Split content by double newlines to identify paragraphs
+    $paragraphs = preg_split('/\n\s*\n/', $content, -1, PREG_SPLIT_NO_EMPTY);
+
+    $formatted = '';
+    foreach ($paragraphs as $paragraph) {
+        $paragraph = trim($paragraph);
+
+        // Check if it's a heading (starts with # or ##)
+        if (preg_match('/^##\s+(.+)$/m', $paragraph, $matches)) {
+            $formatted .= '<h3>' . $matches[1] . '</h3>';
+        } elseif (preg_match('/^#\s+(.+)$/m', $paragraph, $matches)) {
+            $formatted .= '<h2>' . $matches[1] . '</h2>';
+        }
+        // Check if it's a bullet list (lines starting with * or -)
+        elseif (preg_match('/^[\*\-]\s+/m', $paragraph)) {
+            $lines = explode("\n", $paragraph);
+            $formatted .= '<ul>';
+            foreach ($lines as $line) {
+                if (preg_match('/^[\*\-]\s+(.+)$/', $line, $matches)) {
+                    $formatted .= '<li>' . $matches[1] . '</li>';
+                }
+            }
+            $formatted .= '</ul>';
+        }
+        // Check if it's a numbered list (lines starting with 1., 2., etc)
+        elseif (preg_match('/^\d+\.\s+/m', $paragraph)) {
+            $lines = explode("\n", $paragraph);
+            $formatted .= '<ol>';
+            foreach ($lines as $line) {
+                if (preg_match('/^\d+\.\s+(.+)$/', $line, $matches)) {
+                    $formatted .= '<li>' . $matches[1] . '</li>';
+                }
+            }
+            $formatted .= '</ol>';
+        }
+        // Check if it's a blockquote (starts with >)
+        elseif (preg_match('/^>\s+(.+)$/m', $paragraph, $matches)) {
+            $formatted .= '<blockquote>' . $matches[1] . '</blockquote>';
+        }
+        // Otherwise it's a regular paragraph
+        else {
+            $formatted .= '<p>' . nl2br($paragraph) . '</p>';
+        }
+    }
+
+    return $formatted;
+}
+
+// Format blog content for better readability
+$formatted_content = formatBlogContent($blog['content']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
+    <!-- Google Tag Manager -->
     <script>
         (function(w, d, s, l, i) {
             w[l] = w[l] || [];
@@ -51,328 +127,59 @@ $related_result = mysqli_query($conn, $related_query);
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-K9SX33NJ');
     </script>
-
+    <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/zocom no bg logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="images/zocom no bg logo.png">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="<?php echo htmlspecialchars($blog['title']); ?> - Zocom Limited Blog">
+    <meta name="description" content="<?php echo htmlspecialchars($blog['excerpt']); ?>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="<?php echo "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
+    <meta property="og:title" content="<?php echo htmlspecialchars($blog['title']); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($blog['excerpt']); ?>">
+    <?php if ($blog['featured_image']): ?>
+        <meta property="og:image" content="<?php echo "https://$_SERVER[HTTP_HOST]/" . $blog['featured_image']; ?>">
+    <?php endif; ?>
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
+    <meta property="twitter:title" content="<?php echo htmlspecialchars($blog['title']); ?>">
+    <meta property="twitter:description" content="<?php echo htmlspecialchars($blog['excerpt']); ?>">
+    <?php if ($blog['featured_image']): ?>
+        <meta property="twitter:image" content="<?php echo "https://$_SERVER[HTTP_HOST]/" . $blog['featured_image']; ?>">
+    <?php endif; ?>
+
     <title><?php echo htmlspecialchars($blog['title']); ?> - Zocom Limited Blog</title>
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/blogs.css">
-
-    <style>
-        /* Reading Progress Bar */
-        .progress-container {
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            height: 4px;
-            background: transparent;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: linear-gradient(to right, #2a5298, #ff0081);
-            width: 0%;
-            transition: width 0.2s ease;
-        }
-
-        /* Hero Section */
-        .blog-hero {
-            position: relative;
-            height: 500px;
-            background-color: #0F172A;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .blog-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95));
-        }
-
-        .blog-hero__image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.3;
-        }
-
-        .blog-hero__content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 0 2rem;
-        }
-
-        .blog-hero__category {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .blog-hero__title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .blog-hero__meta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
-        .blog-hero__meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Main Content */
-        .blog-detail {
-            padding: 4rem 0;
-            background: #f8fafc;
-        }
-
-        .blog-detail__container {
-            display: grid;
-            grid-template-columns: 1fr minmax(200px, 300px);
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .blog-detail__main {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .blog-detail__content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #334155;
-        }
-
-        .blog-detail__content p {
-            margin-bottom: 1.5rem;
-        }
-
-        .blog-detail__content h2 {
-            color: #1e3c72;
-            font-size: 1.8rem;
-            margin: 2rem 0 1rem;
-        }
-
-        .blog-detail__content img {
-            max-width: 100%;
-            border-radius: 12px;
-            margin: 2rem 0;
-        }
-
-        /* Sidebar */
-        .blog-detail__sidebar {
-            position: sticky;
-            top: 2rem;
-            height: fit-content;
-        }
-
-        .sidebar-widget {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-widget__title {
-            font-size: 1.3rem;
-            color: #1e3c72;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .share-button {
-            flex: 1;
-            padding: 0.8rem;
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .share-button:hover {
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        .related-posts {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .related-post {
-            display: flex;
-            gap: 1rem;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.3s ease;
-        }
-
-        .related-post:hover {
-            transform: translateX(5px);
-            color: inherit;
-        }
-
-        .related-post__image {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
-        .related-post__content {
-            flex: 1;
-        }
-
-        .related-post__title {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #1e3c72;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .related-post__date {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        /* Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 45px;
-            height: 45px;
-            background: #2a5298;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-        }
-
-        .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .back-to-top:hover {
-            background: #1e3c72;
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .blog-detail__container {
-                grid-template-columns: 1fr;
-            }
-
-            .blog-detail__sidebar {
-                position: static;
-                margin-top: 2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .blog-hero {
-                height: 400px;
-            }
-
-            .blog-detail__main {
-                padding: 2rem;
-            }
-
-            .blog-hero__meta {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .blog-detail {
-                padding: 2rem 0;
-            }
-
-            .blog-detail__container {
-                padding: 0 1rem;
-            }
-
-            .blog-detail__main {
-                padding: 1.5rem;
-            }
-
-            .share-buttons {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/blog-detail.css">
 </head>
 
 <body>
-
-
+    <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9SX33NJ"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <?php include 'components/navbar.php'; ?>
 
     <!-- Reading Progress Bar -->
@@ -408,41 +215,89 @@ $related_result = mysqli_query($conn, $related_query);
                     <i class="far fa-calendar"></i>
                     <span><?php echo date('M d, Y', strtotime($blog['created_at'])); ?></span>
                 </div>
+                <div class="blog-hero__meta-item">
+                    <i class="far fa-clock"></i>
+                    <span><?php echo $reading_time; ?> read</span>
+                </div>
             </div>
         </div>
     </section>
+
+    <!-- Blog Info Bar -->
+    <div class="blog-info-bar">
+        <div class="blog-info-container">
+            <div class="blog-info__meta">
+                <div class="blog-info__item">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Published: <?php echo date('F j, Y', strtotime($blog['created_at'])); ?></span>
+                </div>
+                <div class="blog-info__item">
+                    <i class="far fa-folder"></i>
+                    <span>Category: <?php echo htmlspecialchars($blog['category']); ?></span>
+                </div>
+                <div class="blog-info__item">
+                    <i class="far fa-clock"></i>
+                    <span><?php echo $reading_time; ?> read</span>
+                </div>
+            </div>
+            <div class="blog-info__share">
+                <span class="blog-info__share-text">Share:</span>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode("https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>"
+                    class="social-icon social-icon--facebook" target="_blank" aria-label="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode("https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>&text=<?php echo urlencode($blog['title']); ?>"
+                    class="social-icon social-icon--twitter" target="_blank" aria-label="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode("https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>"
+                    class="social-icon social-icon--linkedin" target="_blank" aria-label="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://wa.me/?text=<?php echo urlencode($blog['title'] . ' ' . "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>"
+                    class="social-icon social-icon--whatsapp" target="_blank" aria-label="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="blog-detail">
         <div class="blog-detail__container">
             <article class="blog-detail__main">
+                <!-- Table of Contents - Generated via JavaScript -->
+                <div class="toc-container" id="tableOfContents">
+                    <h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>
+                    <ul class="toc-links" id="tocLinks"></ul>
+                </div>
+
+                <!-- Blog Content -->
                 <div class="blog-detail__content">
-                    <?php echo $blog['content']; ?>
+                    <?php echo $formatted_content; ?>
+                </div>
+
+                <!-- Author Box -->
+                <div class="author-box">
+                    <div class="author-avatar">
+                        <?php echo strtoupper(substr($blog['author'], 0, 1)); ?>
+                    </div>
+                    <div class="author-info">
+                        <h3><?php echo htmlspecialchars($blog['author']); ?></h3>
+                        <p>Content writer at Zocom Limited with expertise in safety equipment and workplace safety practices.</p>
+                    </div>
                 </div>
             </article>
 
             <aside class="blog-detail__sidebar">
-                <!-- Share Widget -->
-                <div class="sidebar-widget">
-                    <h3 class="sidebar-widget__title">Share this article</h3>
-                    <div class="share-buttons">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
-                            class="share-button" style="background: #1877f2;" target="_blank">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>&text=<?php echo urlencode($blog['title']); ?>"
-                            class="share-button" style="background: #1da1f2;" target="_blank">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"
-                            class="share-button" style="background: #0a66c2;" target="_blank">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://wa.me/?text=<?php echo urlencode($blog['title'] . ' ' . $_SERVER['REQUEST_URI']); ?>"
-                            class="share-button" style="background: #25d366;" target="_blank">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                <!-- CTA Widget -->
+                <div class="cta-widget">
+                    <div class="cta-icon">
+                        <i class="fas fa-headset"></i>
                     </div>
+                    <h3 class="cta-title">Need Safety Equipment?</h3>
+                    <p class="cta-text">Contact us to discuss your safety equipment needs. Our team is ready to assist you.</p>
+                    <a href="contacts.php" class="cta-btn">Contact Us</a>
                 </div>
 
                 <!-- Related Posts Widget -->
@@ -459,15 +314,33 @@ $related_result = mysqli_query($conn, $related_query);
                                         <h4 class="related-post__title">
                                             <?php echo htmlspecialchars($related['title']); ?>
                                         </h4>
-                                        <span class="related-post__date">
-                                            <?php echo date('M d, Y', strtotime($related['created_at'])); ?>
-                                        </span>
+                                        <div class="related-post__date">
+                                            <i class="far fa-calendar-alt"></i>
+                                            <span><?php echo date('M d, Y', strtotime($related['created_at'])); ?></span>
+                                        </div>
                                     </div>
                                 </a>
                             <?php endwhile; ?>
                         </div>
                     </div>
                 <?php endif; ?>
+
+                <!-- Categories Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="sidebar-widget__title">Categories</h3>
+                    <ul class="category-list">
+                        <?php
+                        $categories_query = "SELECT DISTINCT category FROM blogs WHERE status = 'published' AND category IS NOT NULL AND category != ''";
+                        $categories_result = mysqli_query($conn, $categories_query);
+                        while ($category = mysqli_fetch_assoc($categories_result)): ?>
+                            <li class="category-item">
+                                <a href="blogs.php?category=<?php echo urlencode($category['category']); ?>">
+                                    <?php echo htmlspecialchars($category['category']); ?>
+                                </a>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
+                </div>
             </aside>
         </div>
     </main>
@@ -484,6 +357,53 @@ $related_result = mysqli_query($conn, $related_query);
         document.addEventListener('DOMContentLoaded', function() {
             const progressBar = document.getElementById('readingProgress');
             const backToTop = document.getElementById('backToTop');
+            const articleContent = document.querySelector('.blog-detail__content');
+            const tableOfContents = document.getElementById('tableOfContents');
+            const tocLinks = document.getElementById('tocLinks');
+
+            // Generate Table of Contents
+            function generateTableOfContents() {
+                // Get all h2 and h3 elements in the content
+                const headings = articleContent.querySelectorAll('h2, h3');
+
+                // If there are fewer than 3 headings, hide the TOC
+                if (headings.length < 3) {
+                    tableOfContents.style.display = 'none';
+                    return;
+                }
+
+                // Add ID to each heading and create TOC links
+                headings.forEach((heading, index) => {
+                    const id = 'heading-' + index;
+                    heading.id = id;
+
+                    const listItem = document.createElement('li');
+                    listItem.className = 'toc-link';
+
+                    // Add additional padding for h3 elements
+                    if (heading.tagName === 'H3') {
+                        listItem.style.paddingLeft = '2rem';
+                    }
+
+                    const link = document.createElement('a');
+                    link.href = '#' + id;
+                    link.textContent = heading.textContent;
+
+                    listItem.appendChild(link);
+                    tocLinks.appendChild(listItem);
+                });
+            }
+
+            // Make images zoomable
+            function makeImagesZoomable() {
+                const images = articleContent.querySelectorAll('img');
+                images.forEach(img => {
+                    img.classList.add('zoomable');
+                    img.addEventListener('click', function() {
+                        this.classList.toggle('zoomed');
+                    });
+                });
+            }
 
             // Calculate reading progress
             function updateReadingProgress() {
@@ -511,124 +431,52 @@ $related_result = mysqli_query($conn, $related_query);
                 });
             });
 
-            // Update progress on scroll
-            window.addEventListener('scroll', updateReadingProgress);
-
-            // Initialize progress
-            updateReadingProgress();
-
-            // Handle image loading
-            document.querySelectorAll('img').forEach(img => {
-                img.addEventListener('load', updateReadingProgress);
-            });
-
-            // Add smooth scrolling to all anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
+            // Smooth scroll for TOC links and handle active states
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target.tagName === 'A' && target.parentNode.classList.contains('toc-link')) {
                     e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
+                    const targetId = target.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        const headerOffset = 100; // Adjust for fixed header
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
                             behavior: 'smooth'
                         });
+
+                        // Update URL without reloading
+                        history.pushState(null, null, '#' + targetId);
                     }
-                });
+                }
             });
 
-            // Initialize share buttons
-            const shareButtons = document.querySelectorAll('.share-buttons a');
-            shareButtons.forEach(button => {
+            // Handle social sharing
+            document.querySelectorAll('.social-icon').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     window.open(this.href, '_blank', 'width=600,height=400');
                 });
             });
 
-            // Add zoom effect to blog images
-            const blogImages = document.querySelectorAll('.blog-detail__content img');
-            blogImages.forEach(img => {
-                img.style.cursor = 'pointer';
-                img.addEventListener('click', function() {
-                    this.classList.toggle('zoomed');
-                });
+            // Initialize
+            generateTableOfContents();
+            makeImagesZoomable();
+            updateReadingProgress();
+
+            // Update progress on scroll
+            window.addEventListener('scroll', updateReadingProgress);
+
+            // Update progress when images load (can change document height)
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('load', updateReadingProgress);
             });
         });
     </script>
-
-    <!-- Add image zoom styles -->
-    <style>
-        .blog-detail__content img {
-            transition: transform 0.3s ease;
-        }
-
-        .blog-detail__content img.zoomed {
-            transform: scale(1.5);
-            z-index: 1000;
-            position: relative;
-        }
-
-        /* Add smooth scroll behavior */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Improve article typography */
-        .blog-detail__content {
-            font-family: var(--font-primary);
-        }
-
-        .blog-detail__content h2,
-        .blog-detail__content h3,
-        .blog-detail__content h4 {
-            font-family: var(--font-primary);
-            color: #1e3c72;
-            margin-top: 2em;
-            margin-bottom: 1em;
-        }
-
-        .blog-detail__content p {
-            margin-bottom: 1.5em;
-        }
-
-        .blog-detail__content ul,
-        .blog-detail__content ol {
-            margin-bottom: 1.5em;
-            padding-left: 1.5em;
-        }
-
-        .blog-detail__content li {
-            margin-bottom: 0.5em;
-        }
-
-        .blog-detail__content blockquote {
-            margin: 2em 0;
-            padding: 1em 1.5em;
-            border-left: 4px solid #2a5298;
-            background: #f8fafc;
-            font-style: italic;
-            color: #475569;
-        }
-
-        /* Print styles */
-        @media print {
-
-            .progress-container,
-            .back-to-top,
-            .share-buttons,
-            .blog-detail__sidebar {
-                display: none !important;
-            }
-
-            .blog-detail__container {
-                grid-template-columns: 1fr !important;
-            }
-
-            .blog-detail__main {
-                box-shadow: none !important;
-                padding: 0 !important;
-            }
-        }
-    </style>
 </body>
 
 </html>

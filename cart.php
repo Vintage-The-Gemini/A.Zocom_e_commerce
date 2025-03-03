@@ -24,7 +24,7 @@ if (!isset($_SESSION['cart'])) {
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9SX33NJ"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- End Google Tag Manager (noscript) -->
     <?php include 'components/navbar.php'; ?>
 
     <main class="cart-page">
@@ -82,33 +82,6 @@ if (!isset($_SESSION['cart'])) {
     <?php include 'components/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function showOrderNotification() {
-            const toast = document.createElement('div');
-            toast.className = 'custom-toast success-toast';
-            toast.innerHTML = `
-        <div class="toast-content">
-            <i class="fas fa-check-circle"></i>
-            <span>Cart order initiated! Opening WhatsApp...</span>
-        </div>
-    `;
-
-            document.querySelector('.toast-container').appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Update your orderViaWhatsApp function
-        function orderViaWhatsApp() {
-            showOrderNotification();
-            // Rest of your existing orderViaWhatsApp code...
-        }
-    </script>
-
-
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/cart.js"></script>
 </body>
