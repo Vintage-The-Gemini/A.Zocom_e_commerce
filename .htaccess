@@ -1,32 +1,19 @@
-# Turn on the rewrite engine
+# Enable rewrite engine
 RewriteEngine On
 
-# Ensure mod_rewrite is enabled
-<IfModule mod_rewrite.c>
-    # Handle www to non-www redirect (optional)
-    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
-    
-    # If requested resource exists as a file or directory, skip the following rules
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-    
-    # Redirect requests with .php extension to non-php URLs
-    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
-    RewriteRule ^ /%1 [R=301,NE,L]
-    
-    # Internally rewrite clean URLs to their PHP scripts
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME}.php -f
-    RewriteRule ^(.+?)/?$ $1.php [L]
-</IfModule>
+# If the requested resource exists as a file or directory, skip the following rewrite rules
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# Set default index file
-DirectoryIndex index.php
+# Handle homepage
+RewriteRule ^$ index.php [L]
 
-# Disable directory browsing
-Options -Indexes
+# Remove trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-# Set default character set
-AddDefaultCharset UTF-8
+# Rewrite URLs without .php extension to the corresponding PHP files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]

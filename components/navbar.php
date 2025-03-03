@@ -1,5 +1,5 @@
 <?php
-// Define the current page for active state
+// Get current page for active state
 $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
 ?>
 
@@ -8,12 +8,6 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
         <a href="index" class="navbar__brand">
             <img src="images/zocom no bg logo.png" alt="Zocom Logo" class="navbar__logo">
         </a>
-
-        <button id="navbarToggle" class="navbar__toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
 
         <div class="navbar__menu">
             <ul class="navbar__nav">
@@ -24,10 +18,16 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
                 <li><a href="contacts.php" class="navbar__link <?php echo ($current_page == 'contacts') ? 'active' : ''; ?>">Contact</a></li>
             </ul>
 
-            <a href="cart" class="navbar__cart">
+            <a href="cart.php" class="navbar__cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></span>
             </a>
         </div>
+
+        <button id="navbarToggle" class="navbar__toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </nav>
