@@ -118,6 +118,7 @@ require_once 'server/get_featured_products.php';
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9SX33NJ"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
     <?php include 'components/navbar.php'; ?>
 
     <!-- Mobile Category Menu Toggle -->
@@ -405,6 +406,7 @@ require_once 'server/get_featured_products.php';
     </script>
     <script src="assets/js/cart.js" defer></script>
     <script src="assets/js/shop.js" defer></script>
+
 
 </body>
 

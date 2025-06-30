@@ -64,98 +64,7 @@ session_start();
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/about.css">
 
-    <style>
-        /* Client Section Styles */
-        .clients-section {
-            padding: 80px 0;
-            background: linear-gradient(to bottom, #ffffff, #f8fafc);
-            position: relative;
-        }
 
-        .clients-section h2 {
-            text-align: center;
-            color: #1e3c72;
-            margin-bottom: 15px;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .clients-section .section-subtitle {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .clients-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin: 0 auto;
-            max-width: 1200px;
-        }
-
-        .client-card {
-            background: white;
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .client-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .client-card img {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-            filter: grayscale(0.3);
-            transition: filter 0.3s ease;
-        }
-
-        .client-card:hover img {
-            filter: grayscale(0);
-        }
-
-        @media (max-width: 992px) {
-            .clients-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .clients-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .client-card {
-                height: 120px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .clients-section {
-                padding: 40px 0;
-            }
-
-            .clients-grid {
-                gap: 15px;
-            }
-
-            .client-card {
-                height: 100px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -266,72 +175,67 @@ session_start();
         </section>
 
         <!-- Clients Section - NEW -->
-        <section class="clients-section">
-            <div class="container">
+        <!-- Clients Section - Improved Layout -->
+        <section class="clients-section no-whitespace">
+            <div class="compact-header">
                 <h2>Our Esteemed Clients</h2>
                 <p class="section-subtitle">Trusted by industry leaders and organizations across Kenya</p>
+            </div>
 
-                <div class="clients-grid">
-                    <div class="client-card">
-                        <img src="images/Nairobi_Hospital_Logo.png" alt="The Nairobi Hospital">
-                    </div>
-                    <div class="client-card">
-                        <img src="images/TOTAL ENERGIES LOGO.svg" alt="Total Kenya PLC">
-                    </div>
-                    <div class="client-card">
-                        <img src="images/Kenya power logo.png" alt="Kenya Power">
-                    </div>
-                    <div class="client-card">
-                        <img src="images/agrochemical foods logo.png" alt="Agro-Chemical and Food Company Limited">
-                    </div>
-                    <div class="client-card">
-                        <img src="images/kengen logo.png" alt="KenGen">
-                    </div>
-                    <div class="client-card">
-                        <img src="images/KNH LOGO.png" alt="Kenyatta National Hospital">
-                    </div>
+            <div class="logo-grid">
+                <div class="logo-item">
+                    <img src="images/Nairobi_Hospital_Logo.png" alt="The Nairobi Hospital">
+                </div>
+                <div class="logo-item">
+                    <img src="images/TOTAL ENERGIES LOGO.svg" alt="Total Kenya PLC">
+                </div>
+                <div class="logo-item">
+                    <img src="images/Kenya power logo.png" alt="Kenya Power">
+                </div>
+                <div class="logo-item">
+                    <img src="images/agrochemical foods logo.png" alt="Agro-Chemical and Food Company Limited">
+                </div>
+                <div class="logo-item">
+                    <img src="images/kengen logo.png" alt="KenGen">
+                </div>
+                <div class="logo-item">
+                    <img src="images/KNH LOGO.png" alt="Kenyatta National Hospital">
                 </div>
             </div>
         </section>
 
         <!-- Partners Section -->
-        <section class="partners-section">
-            <div class="container">
+        <!-- Partners Section - Improved Layout -->
+        <section class="partners-section no-whitespace">
+            <div class="compact-header">
                 <h2>Our Partners</h2>
                 <p class="section-subtitle">We work with the best safety wear brands in the world</p>
+            </div>
 
-                <div class="partners-grid">
-                    <a href="https://www.safetyjogger.com/" target="_blank" class="partner-card">
-                        <img src="logos/SAFETY JOGGER LOGO.png" alt="Safety Jogger">
-                    </a>
-
-                    <a href="https://www.deltaplus.eu/en-US/" target="_blank" class="partner-card">
-                        <img src="logos/DELTA PLUS LOGO.svg" alt="Delta Plus">
-                    </a>
-
-                    <a href="https://www.wondergrip.com/en/" target="_blank" class="partner-card">
-                        <img src="logos/wondergrip logo 4.jpg" alt="Wonder Grip">
-                    </a>
-
-                    <a href="https://www.bova.co.za" target="_blank" class="partner-card">
-                        <img src="logos/bova_logo.png" alt="Bova">
-                    </a>
-
-                    <a href="goliath.co.uk" target="_blank" class="partner-card">
-                        <img src="logos/GOLIATH 4.jpg" alt="Goliath">
-                    </a>
-
-                    <a href="https://www.leoworkwear.com/" target="_blank" class="partner-card">
-                        <img src="logos/leo_workwear_logo.png" alt="Leo Workwear">
-                    </a>
-
-                    <a href="https://www.xmtextiles.com/" target="_blank" class="partner-card">
-                        <img src="logos/xm_textiles_logo.png" alt="XM Textiles">
-                    </a>
-
-                    <a href="https://superhousegroup.com/" target="_blank" class="partner-card">
-                        <img src="logos/super_house_logo.png" alt="Super House" class="superhouse">
-                    </a>
+            <div class="logo-grid">
+                <div class="logo-item">
+                    <img src="logos/SAFETY JOGGER LOGO.png" alt="Safety Jogger">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/DELTA PLUS LOGO.svg" alt="Delta Plus">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/wondergrip logo 4.jpg" alt="Wonder Grip">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/bova_logo.png" alt="Bova">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/GOLIATH 4.jpg" alt="Goliath">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/leo_workwear_logo.png" alt="Leo Workwear">
+                </div>
+                <div class="logo-item">
+                    <img src="logos/xm_textiles_logo.png" alt="XM Textiles">
+                </div>
+                <div class="logo-item dark-bg">
+                    <img src="logos/super_house_logo.png" alt="Super House">
                 </div>
             </div>
         </section>
